@@ -1,0 +1,17 @@
+vb_voterbase_id,model_id,probability
+voter_1,model_1,0.95
+voter_1,model_2,0.98
+voter_1,model_3,0.14
+voter_1,model_4,0.23
+voter_2,model_1,0.11
+voter_2,model_2,0.64
+voter_2,model_3,0.95
+voter_2,model_4,0.78
+voter_3,model_1,0.95
+voter_3,model_2,0.99
+voter_3,model_3,1.00
+voter_3,model_4,0.20
+voter_4,model_1,0.77
+voter_4,model_2,0.91
+voter_4,model_3,0.99
+voter_4,model_4,0.84
