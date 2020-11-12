@@ -62,15 +62,15 @@ class Allocator:
     def __init__(self, 
                  allocation_distribution,
                  num_allocations,
-                 predictions,
+                 pool,
                  strategy = 'round-robin',
                  order = 'random'):
         self._num_allocations = None
         self.num_allocations = num_allocations
         self._allocation_distribution = None
         self.allocation_distribution = allocation_distribution
-        self._predictions = None
-        self.predictions = predictions
+        self._pool = None
+        self.pool = pool
         self._strategy = None
         self.strategy = strategy
         self._order = None
@@ -84,41 +84,41 @@ class Allocator:
     @allocation_distribution.setter
     def allocation_distribution(self,allocation_distribution):
         if not isinstance(allocation_distribution,dict):
-            raise TypeError('Must pass model allocations as a dictionary keyed '
-                            'by model ID (str) with values being floats '
+            raise TypeError('Must pass pool allocations as a dictionary keyed '
+                            'by pool ID (str) with values being floats '
                             'representing the allocation percentage.')
         elif len(set([type(k) for k in allocation_distribution.keys()])) > 1:
-            raise TypeError('At least one id in model allocations is not a '
-                             'string. Verify supplied keys.')
+            raise TypeError('At least one pool id in allocation_distribution '
+                             'is not a string. Verify supplied keys.')
         elif len(set([type(v) for v in allocation_distribution.values()])) >1:
-            raise TypeError('At least one allocation in model allocations is '
-                            'not a float. Verify supplied allocations.')
+            raise TypeError('At least one allocation in allocation_distribution'
+                            ' is not a float. Verify supplied allocations.')
         
         sum_of_model_allocations = sum([v for v in allocation_distribution.values()])
         
         if sum_of_model_allocations != 1.0:
-            raise ValueError('Sum of model allocations must equal 1.0 not '
+            raise ValueError('Sum of pool allocations must equal 1.0 not '
                              f'{sum_of_model_allocations}.')            
         else:
             self._allocation_distribution = allocation_distribution
 
     @property
-    def predictions(self):
-        return self._predictions
+    def pool(self):
+        return self._pool
 
-    @predictions.setter
-    def predictions(self,obj):
+    @pool.setter
+    def pool(self,obj):
         '''
-        Validates the predictions passed to the constructor or any updated
-        predictions after initialization. Sets up the "picked" variable and 
+        Validates the pool passed to the constructor or any updated
+        pool after initialization. Sets up the "picked" variable and 
         sorts the DataFrame by model_id and probability.
         '''
         if not isinstance(obj,pd.DataFrame):
-            raise TypeError(f'Predictions must be a pd.DataFrame, not {type(obj)}')
+            raise TypeError(f'pool must be a pd.DataFrame, not {type(obj)}')
         else:
-            self._predictions = obj
-            self._predictions['picked'] = 0
-            self._predictions.sort_values(['model_id','probability'],
+            self._pool = obj
+            self._pool['picked'] = 0
+            self._pool.sort_values(['model_id','probability'],
                                            ascending=False,
                                            inplace=True)
 
@@ -192,10 +192,10 @@ class Allocator:
         that index.
         '''
         # get a pred id from the model per to order strategy
-        indices = self.predictions[(self.predictions['model_id'] == model_id)
-                                    & (self.predictions['picked'] == 0)].index
+        indices = self.pool[(self.pool['model_id'] == model_id)
+                                    & (self.pool['picked'] == 0)].index
         idx = self.pick_index(indices)
-        vid = self.predictions.at[idx,'vb_voterbase_id']
+        vid = self.pool.at[idx,'vb_voterbase_id']
         return idx, vid
 
     def allocate_id(self,index,voter_id,model_id):
@@ -206,9 +206,9 @@ class Allocator:
         #allocate the ID
         self.allocations.append((voter_id,model_id))
         # set picked column for that id
-        id_indices = self.predictions[self.predictions['vb_voterbase_id'] == voter_id].index
+        id_indices = self.pool[self.pool['vb_voterbase_id'] == voter_id].index
         for i in id_indices:
-            self.predictions.at[i,'picked'] = 1
+            self.pool.at[i,'picked'] = 1
 
     def make_n_allocations_from_model(self,n,model_id):
         '''
@@ -223,7 +223,7 @@ class Allocator:
             self.allocate_id(idx,v_id,model_id)
             made += 1
 
-    def allocate_predictions(self):
+    def allocate_pool(self):
         '''
         Performs checks to ensure appropriate amount of allocations are made.
         Then makes the allocations based on the strategy set for the mechanism.
@@ -231,17 +231,17 @@ class Allocator:
         instance.
         Also returns self.allocations for direct access when called.
         '''
-        num_models = len(self.predictions['model_id'].unique())
-        total_preds = self.predictions.shape[0]//num_models
+        num_models = len(self.pool['model_id'].unique())
+        total_preds = self.pool.shape[0]//num_models
         if total_preds < self.num_allocations:
             warnings.warn('Specified number of allocations, '
                           f'{self.num_allocations}, is greater than the '
-                          'number of predictions provided. Only allocating '
-                          f'{total_preds} predictions.')
+                          'number of pool provided. Only allocating '
+                          f'{total_preds} pool.')
         else:
             total_preds = self.num_allocations
 
-        # generate the number of predictions to make for each model
+        # generate the number of pool to make for each model
         models = []
         for model,allocation in self.allocation_distribution.items():
             models.append({'id':model,
@@ -290,5 +290,5 @@ if __name__ == '__main__':
     with open('test_files/test_allocation1.json', 'r') as read_file:
         test_alloc_dist = json.load(read_file)
     allocator = Allocator(test_alloc_dist,4,test_preds,strategy='round-robin',order='random')
-    a = allocator.allocate_predictions()
+    a = allocator.allocate_pool()
     print(a)
