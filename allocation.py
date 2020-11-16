@@ -66,7 +66,7 @@ class Allocator:
                  score_col,
                  target_id_col,
                  strategy = 'round-robin',
-                 order = 'random'):
+                 order = 'best'):
         self._num_allocations = None
         self.num_allocations = num_allocations
         self._allocation_distribution = None
@@ -80,7 +80,7 @@ class Allocator:
         self.strategy = strategy
         self._order = None
         self.order = order
-        self._allocations = []
+        self._targets = []
 
     @property
     def allocation_distribution(self):
@@ -174,8 +174,8 @@ class Allocator:
             self._order = order
 
     @property
-    def allocations(self):
-        return self._allocations
+    def targets(self):
+        return self._targets
 
     def pick_index(self, indices):
         '''
@@ -193,7 +193,7 @@ class Allocator:
 
     def pick_id(self,pool_id):
         '''
-        For a given pool, picks an index and extracts the vb_voterase_id at
+        For a given pool, picks an index and extracts the target id at
         that index.
         '''
         # get a pred id from the pool per to order strategy
@@ -209,7 +209,7 @@ class Allocator:
         with that id to indicate it has been picked already.
         '''
         #allocate the ID
-        self.allocations.append((target_id,pool_id))
+        self.targets.append((target_id,pool_id))
         # set picked column for that id
         id_indices = self.pool[self.pool[self.target_id_col] == target_id].index
         for i in id_indices:
@@ -220,7 +220,7 @@ class Allocator:
         Wrapper to make multiple allocations for a pool at once.
         '''
         if not n >= 1:
-            raise ValueError('Number of allocations to make is invalid. \
+            raise ValueError('Number of targets to pick is invalid. \
                               Must be >= 1')
         made = 0
         while made < n:
@@ -239,10 +239,10 @@ class Allocator:
         num_pools = len(self.pool[self.pool_id_col].unique())
         total_preds = self.pool.shape[0]//num_pools
         if total_preds < self.num_allocations:
-            warnings.warn('Specified number of allocations, '
+            warnings.warn('Specified number of targets to pick, '
                           f'{self.num_allocations}, is greater than the '
-                          'number of pool provided. Only allocating '
-                          f'{total_preds} pool.')
+                          'number of targets in the pool. Only allocating '
+                          f'{total_preds} targets.')
         else:
             total_preds = self.num_allocations
 
@@ -273,7 +273,7 @@ class Allocator:
                     current_pool_index += 1
         elif self._strategy == 'greedy':
             # greedy strat, pick from pool with greatest allocation first
-            remaining_allocations = total_preds - len(self.allocations)
+            remaining_allocations = total_preds - len(self.targets)
             for pool in reversed(pools):
                 n = min(pool['count'],remaining_allocations)
                 if n >= 1:
@@ -281,20 +281,20 @@ class Allocator:
                     remaining_allocations -= n
         else:
             # altruist strat, pick from pool with smallest allocation first
-            remaining_allocations = total_preds - len(self.allocations)
+            remaining_allocations = total_preds - len(self.targets)
             for pool in pools:
                 n = min(pool['count'],remaining_allocations)
                 if n >= 1:
                     self.make_n_allocations_from_pool(n,pool['id'])
                     remaining_allocations -= n
 
-        return self.allocations
+        return self.targets
 
 if __name__ == '__main__':
     import json
     test_preds = pd.read_csv('test_files/test_predictions1.csv')
     with open('test_files/test_allocation1.json', 'r') as read_file:
         test_alloc_dist = json.load(read_file)
-    allocator = Allocator(test_alloc_dist,4,test_preds,'model_id','probability','vb_voterbase_id',strategy='round-robin',order='random')
+    allocator = Allocator(test_alloc_dist,10,test_preds,'model_id','probability','vb_voterbase_id',strategy='round-robin',order='best')
     a = allocator.allocate_pool()
     print(a)
