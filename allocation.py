@@ -1,4 +1,3 @@
-import json
 from math import ceil
 import pandas as pd
 from random import choice
@@ -72,11 +71,11 @@ class Allocator:
         self.num_allocations = num_allocations
         self._allocation_distribution = None
         self.allocation_distribution = allocation_distribution
-        self._pool = None
-        self.pool = pool
         self.pool_id_col = pool_id_col
         self.score_col = score_col
         self.target_id_col = target_id_col
+        self._pool = None
+        self.pool = pool
         self._strategy = None
         self.strategy = strategy
         self._order = None
@@ -292,9 +291,10 @@ class Allocator:
         return self.allocations
 
 if __name__ == '__main__':
+    import json
     test_preds = pd.read_csv('test_files/test_predictions1.csv')
     with open('test_files/test_allocation1.json', 'r') as read_file:
         test_alloc_dist = json.load(read_file)
-    allocator = Allocator(test_alloc_dist,4,test_preds,strategy='round-robin',order='random')
+    allocator = Allocator(test_alloc_dist,4,test_preds,'model_id','probability','vb_voterbase_id',strategy='round-robin',order='random')
     a = allocator.allocate_pool()
     print(a)
