@@ -25,5 +25,8 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
     long_description=long_description,
-    long_desccription_content_type='text/markdown'
+    long_description_content_type='text/markdown',
+    url='https://github.com/Berkeley-Data/darts',
+    author='Nick Sylva',
+    author_email='nick.sylva@berkeley.edu'
 )
