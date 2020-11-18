@@ -4,7 +4,7 @@ Dynamic and Responsive Targeting System (DARTS) is a python package for allocati
 ## Installation
 Run the following to install DARTS:
 ```python
-pip install darts
+pip install darts-berkeley
 ```
 
 ## Usage
