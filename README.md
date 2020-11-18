@@ -87,10 +87,10 @@ target_column = 'voter_id'
 # Specify an even distribution across the sub-pools. This can be done
 # using an automated method, but here is a manual example
 allocations = {
-            'pool_1' : 0.25,
-			'pool_2' : 0.25,
-			'pool_3' : 0.25,
-			'pool_4' : 0.25
+    'pool_1' : 0.25,
+	'pool_2' : 0.25,
+	'pool_3' : 0.25,
+	'pool_4' : 0.25
 }
 
 # Specify the number of targets to pull form your pool.
