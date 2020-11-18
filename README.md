@@ -98,8 +98,8 @@ n = 100
 
 # set up allocator and allocate targets
 allocator = Allocator(allocations, n, target_pool, pool_id_column,
-			score_column, target_column, strategy='round-robin',
-			order='best')
+		  score_column, target_column, strategy='round-robin',
+		  order='best')
 
 targets = allocator.allocate_pool()
 ```
@@ -138,8 +138,8 @@ n = 100
 
 # set up allocator and allocate targets
 allocator = Allocator(allocations, n, target_pool, pool_id_column,
-			score_column, target_column, strategy='round-robin',
-			order='best')
+		  score_column, target_column, strategy='round-robin',
+		  order='best')
 
 targets = allocator.allocate_pool()
 ```
