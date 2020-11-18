@@ -88,18 +88,18 @@ target_column = 'voter_id'
 # using an automated method, but here is a manual example
 allocations = {
                 'pool_1' : 0.25,
-				'pool_2' : 0.25,
-				'pool_3' : 0.25,
-				'pool_4' : 0.25
-			   }
+'pool_2' : 0.25,
+'pool_3' : 0.25,
+'pool_4' : 0.25
+}
 
 # Specify the number of targets to pull form your pool.
 n = 100
 
 # set up allocator and allocate targets
 allocator = Allocator(allocations, n, target_pool, pool_id_column,
-					  score_column, target_column, strategy='round-robin',
-					  order='best')
+			score_column, target_column, strategy='round-robin',
+			order='best')
 
 targets = allocator.allocate_pool()
 ```
@@ -138,8 +138,8 @@ n = 100
 
 # set up allocator and allocate targets
 allocator = Allocator(allocations, n, target_pool, pool_id_column,
-					  score_column, target_column, strategy='round-robin',
-					  order='best')
+			score_column, target_column, strategy='round-robin',
+			order='best')
 
 targets = allocator.allocate_pool()
 ```
