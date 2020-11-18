@@ -1,4 +1,8 @@
 from setuptools import setup
+
+with open('README.md','r') as fh:
+    long_description = fh.read()
+
 setup(
     name='darts',
     version='0.0.1',
@@ -19,5 +23,7 @@ setup(
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
         'Topic :: Software Development :: Libraries :: Python Modules'
-    ]
+    ],
+    long_description=long_description,
+    long_desccription_content_type='text/markdown'
 )
