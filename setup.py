@@ -4,7 +4,7 @@ with open('README.md','r') as fh:
     long_description = fh.read()
 
 setup(
-    name='darts',
+    name='darts-berkeley',
     version='0.0.1',
     description='Dynamic and responsive targeting system using multi-arm bandits modified for delayed feedback.',
     py_modules=['bandit','allocation'],
