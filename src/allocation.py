@@ -289,12 +289,3 @@ class Allocator:
                     remaining_allocations -= n
 
         return self.targets
-
-if __name__ == '__main__':
-    import json
-    test_preds = pd.read_csv('test_files/test_predictions1.csv')
-    with open('test_files/test_allocation1.json', 'r') as read_file:
-        test_alloc_dist = json.load(read_file)
-    allocator = Allocator(test_alloc_dist,10,test_preds,'model_id','probability','vb_voterbase_id',strategy='round-robin',order='best')
-    a = allocator.allocate_pool()
-    print(a)
