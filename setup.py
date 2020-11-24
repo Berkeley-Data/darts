@@ -28,5 +28,8 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/Berkeley-Data/darts',
     author='Nick Sylva',
-    author_email='nick.sylva@berkeley.edu'
+    author_email='nick.sylva@berkeley.edu',
+    install_requires = [
+        'pandas ~= 1.1',
+     ]
 )
