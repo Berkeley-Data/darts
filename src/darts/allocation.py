@@ -103,7 +103,7 @@ class Allocator:
         
         if sum_of_pool_allocations != 1.0:
             raise ValueError('Sum of pool allocations must equal 1.0 not '
-                             f'{sum_of_pool_allocations}.')            
+                             '{0}.'.format(sum_of_pool_allocations))            
         else:
             self._allocation_distribution = allocation_distribution
 
@@ -119,7 +119,7 @@ class Allocator:
         sorts the DataFrame by pool_id_col and score.
         '''
         if not isinstance(obj,pd.DataFrame):
-            raise TypeError(f'pool must be a pd.DataFrame, not {type(obj)}')
+            raise TypeError('pool must be a pd.DataFrame, not {0}'.format(type(obj)))
         else:
             self._pool = obj
             self._pool['picked'] = 0
@@ -137,7 +137,7 @@ class Allocator:
         Verifies that a valid parameter is set for the number of allocations.
         '''
         if not isinstance(num,int):
-            raise TypeError(f'Number of allocations must be an integer not {type(num)}.')
+            raise TypeError('Number of allocations must be an integer not {0}.'.format(type(num)))
         elif num < 1:
             raise ValueError('Specified number of allocations must be at least 1.')
         else:
@@ -240,9 +240,9 @@ class Allocator:
         total_preds = self.pool.shape[0]//num_pools
         if total_preds < self.num_allocations:
             warnings.warn('Specified number of targets to pick, '
-                          f'{self.num_allocations}, is greater than the '
+                          '{0}, is greater than the '.format(self.num_allocations)
                           'number of targets in the pool. Only allocating '
-                          f'{total_preds} targets.')
+                          '{0} targets.'.format(total_preds))
         else:
             total_preds = self.num_allocations
 

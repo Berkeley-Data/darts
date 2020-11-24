@@ -13,19 +13,19 @@ In the first round of allocation, all you need to have set up is a pool of targe
 ```python
 # minimum necessary imports
 import pandas as pd
-from darts import Allocator
+from darts.allocation import Allocator
 
 # load in the data for the target pool
 target_pool = pd.read_csv('path/to/target_pool.csv')
 
 # Specify the columns containing the sub-pool ids.
-pool_id_column = 'model_id'
+pool_id_column = 'pool_id'
 
 # Specify the column that ranks targets for each pool
 score_column = 'probability'
 
 # Specify the column that indicates the id of an individual target
-target_column = 'voter_id'
+target_column = 'target_id'
 
 # Specify an even distribution across the sub-pools. This can be done
 # using an automated method, but here is a manual example
@@ -51,7 +51,8 @@ The following example assumes that at least one round has been completed and rew
 ```python
 # minimum necessary imports
 import pandas as pd
-from darts import Bandit, Allocator
+from darts.bandit import Bandit
+from darts.allocation import Allocator
 
 # load in the data with rewards applied following your own reward logic
 results = pd.read_csv('path/to/results.csv')
@@ -60,7 +61,7 @@ reward_column = 'rewards'
 
 # set up a multi-arm bandit and calculate allocations to each arm.
 bandit = Bandit(results, arm_column, reward_column, policy = 'Bayes_UCB')
-allocations_df = bandit.make_allocs().set_index('arm_column')
+allocations_df = bandit.make_allocs().set_index(arm_column)
 allocations = allocations_df['allocation'].to_dict()
 
 # load in the data for the target pool
