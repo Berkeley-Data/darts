@@ -5,7 +5,7 @@ with open('README.md','r') as fh:
 
 setup(
     name='darts-berkeley',
-    version='0.0.2',
+    version='0.0.3',
     description='Dynamic and responsive targeting system using multi-arm bandits modified for delayed feedback.',
     py_modules=['bandit','allocation'],
     package_dir={'': 'src'},
@@ -30,6 +30,9 @@ setup(
     author='Nick Sylva',
     author_email='nick.sylva@berkeley.edu',
     install_requires = [
-        'pandas ~= 1.1',
+        'pandas >= 0.22.0',
+     ],
+    extra_requires = [
+        'twine'
      ]
 )
