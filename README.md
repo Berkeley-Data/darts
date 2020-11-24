@@ -61,8 +61,7 @@ reward_column = 'rewards'
 
 # set up a multi-arm bandit and calculate allocations to each arm.
 bandit = Bandit(results, arm_column, reward_column, policy = 'Bayes_UCB')
-allocations_df = bandit.make_allocs().set_index(arm_column)
-allocations = allocations_df['allocation'].to_dict()
+allocations = bandit.get_new_allocations()
 
 # load in the data for the target pool
 target_pool = pd.read_csv('path/to/target_pool.csv')

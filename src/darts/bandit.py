@@ -42,9 +42,9 @@ class Bandit:
         - This class does not explicity output anything. 
     Usage:
         - Initialize instance of Bandit
-        - Call make_allocs()
-        - Access allocations by setting a variable equal to the make_allocs
-          call or by accessing the .allocs property after calling make_allocs()
+        - Call get_new_allocations()
+        - Access allocations by setting a variable equal to the get_new_allocations
+          call or by accessing the .allocs property after calling get_new_allocations()
     '''
 
 
@@ -120,7 +120,7 @@ class Bandit:
         self._allocs['exp_score'] = self._allocs['score']**self.greed_factor
         self._allocs['allocation'] = self._allocs['exp_score']/np.sum(self._allocs['exp_score'])
 
-    def make_allocs(self):
+    def get_new_allocations(self):
         '''
         Wrapper for calculating rewards and applying a policy.
         '''
@@ -132,4 +132,7 @@ class Bandit:
 
     @property
     def allocs(self):
-        return self._allocs 
+        '''
+        Getter for the allocations. Returns a dictionary containing the pools with their corresponding allocations.
+        '''
+        return self._allocs.set_index(self.arm_col)['allocation'].to_dict() 
