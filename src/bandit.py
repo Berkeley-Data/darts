@@ -40,7 +40,6 @@ class Bandit:
           arms regardless of explore/exploit policy. 
     Outputs:
         - This class does not explicity output anything. 
-
     Usage:
         - Initialize instance of Bandit
         - Call make_allocs()
@@ -96,6 +95,8 @@ class Bandit:
         '''
         self._allocs = self.df[[self.arm_col,self.reward_col]].groupby(self.arm_col)\
                           .agg({self.reward_col:['mean','count','std']})
+        self._allocs.columns = self._allocs.columns.droplevel(0)
+        self._allocs = pd.DataFrame(self._allocs).reset_index()
 
     def apply_policy(self):
         '''
@@ -109,7 +110,7 @@ class Bandit:
             self._allocs['score'] = self.epsilon_greedy_policy()
         else:
             raise ValueError(f'Policy {self.policy} not implemented.\
-                               Use ["epsilon_greedy","UCB1","BayesUCB"].')
+                               Use ["epsilon_greedy","UCB1","Bayes_UCB"].')
 
     def apply_allocation_weights(self):
         '''
