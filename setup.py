@@ -7,8 +7,8 @@ setup(
     name='darts-berkeley',
     version='0.0.3',
     description='Dynamic and responsive targeting system using multi-arm bandits modified for delayed feedback.',
-    py_modules=['bandit','allocation'],
-    package_dir={'': 'src'},
+    py_modules=['darts'],
+    package_dir={'': 'src/'},
     classifiers=[
         'Programming Language :: Python',
         'Programming Language :: Python :: 3 :: Only',
