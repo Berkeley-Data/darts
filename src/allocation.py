@@ -20,7 +20,7 @@ class Allocator:
         - predictions (pd.DataFrame): Pandas DataFrame that contains the
                                       predictions for each pool. At a minimum,
                                       this object must have columns:
-                                         - vb_voterbase_id (any type)
+                                         - target_id (any type)
                                          - pool_id (str matching pool_ids in
                                                     allocation_distribution)
                                          - probability (float)
@@ -99,7 +99,7 @@ class Allocator:
             raise TypeError('At least one allocation in allocation_distribution'
                             ' is not a float. Verify supplied allocations.')
         
-        sum_of_pool_allocations = sum([v for v in allocation_distribution.values()])
+        sum_of_pool_allocations = round(sum([v for v in allocation_distribution.values()]), 5)
         
         if sum_of_pool_allocations != 1.0:
             raise ValueError('Sum of pool allocations must equal 1.0 not '
