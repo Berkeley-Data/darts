@@ -135,4 +135,4 @@ class Bandit:
         '''
         Getter for the allocations. Returns a dictionary containing the pools with their corresponding allocations.
         '''
-        return self._allocs.set_index(arm_name_col)['allocation'].to_dict() 
+        return self._allocs.set_index(self.arm_col)['allocation'].to_dict() 
