@@ -5,10 +5,10 @@ with open('README.md','r') as fh:
 
 setup(
     name='darts-berkeley',
-    version='0.0.2',
+    version='0.0.3',
     description='Dynamic and responsive targeting system using multi-arm bandits modified for delayed feedback.',
-    py_modules=['bandit','allocation'],
-    package_dir={'': 'src'},
+    py_modules=['darts'],
+    package_dir={'': 'src/'},
     classifiers=[
         'Programming Language :: Python',
         'Programming Language :: Python :: 3 :: Only',
@@ -28,5 +28,11 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/Berkeley-Data/darts',
     author='Nick Sylva',
-    author_email='nick.sylva@berkeley.edu'
+    author_email='nick.sylva@berkeley.edu',
+    install_requires = [
+        'pandas >= 0.22.0',
+     ],
+    extra_requires = [
+        'twine'
+     ]
 )
