@@ -98,7 +98,7 @@ class Allocator:
         elif len(set([type(v) for v in allocation_distribution.values()])) >1:
             raise TypeError('At least one allocation in allocation_distribution'
                             ' is not a float. Verify supplied allocations.')
-        
+
         sum_of_pool_allocations = round(sum([v for v in allocation_distribution.values()]), 5)
         
         if sum_of_pool_allocations != 1.0:
@@ -240,9 +240,9 @@ class Allocator:
         total_preds = self.pool.shape[0]//num_pools
         if total_preds < self.num_allocations:
             warnings.warn('Specified number of targets to pick, '
-                          '{0}, is greater than the '.format(self.num_allocations)
+                          '{0}, is greater than the '
                           'number of targets in the pool. Only allocating '
-                          '{0} targets.'.format(total_preds))
+                          '{0} targets.'.format(self.num_allocations, total_preds))
         else:
             total_preds = self.num_allocations
 
