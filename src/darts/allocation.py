@@ -242,7 +242,7 @@ class Allocator:
             warnings.warn('Specified number of targets to pick, '
                           '{0}, is greater than the '
                           'number of targets in the pool. Only allocating '
-                          '{0} targets.'.format(self.num_allocations, total_preds))
+                          '{1} targets.'.format(self.num_allocations, total_preds))
         else:
             total_preds = self.num_allocations
 

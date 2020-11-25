@@ -101,7 +101,7 @@ class Bandit:
                                 self.regret_col:['mean','count','std','sum']})
         self._allocs.columns = self._allocs.columns.to_flat_index()
         self._allocs.columns = ['_'.join(tup).rstrip('_') for tup in self._allocs.columns.values]
-        self._allocs = pd.DataFrame(self._allocs).reset_index()
+        self._allocs = self._allocs.reset_index()
 
     def apply_policy(self):
         '''
