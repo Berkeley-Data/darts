@@ -15,6 +15,8 @@ class Bandit:
           identifiers for the arms being pulled.
         - reward_col [string]: string defining the column in df that contains
           the rewards defined by your usecase.
+        - regret_col [string]: string defining the column in df that contains
+          the regrets defined by your usecase.
         - policy [string]: string defining which explore/expolit policy to use.
           Options include:
             - Bayes Upper Confidence Bound ("Bayes_UCB"); default
@@ -48,12 +50,13 @@ class Bandit:
     '''
 
 
-    def __init__(self, df, arm_col, reward_col,
+    def __init__(self, df, arm_col, reward_col, regret_col,
                  policy='Bayes_UCB', t = 1, ucb_scale = 1.96,
                  epsilon = 0.1, greed_factor = 1):
         self.df = df
         self.arm_col = arm_col
         self.reward_col = reward_col
+        self.regret_col = regret_col
         self.policy = policy
         self.ucb_scale = ucb_scale
         self.t = t
@@ -69,7 +72,7 @@ class Bandit:
         K = len(self._allocs[self.arm_col].unique()) # number of arms
         expr = self.epsilon/(K-1)
         expt = 1 - self.epsilon
-        best_model_index = np.argmax(self._allocs['mean'].values)
+        best_model_index = np.argmax(self._allocs[self.reward_col + '_mean'].values)
         score_vec = [expr if i != best_model_index else expt for i in range(K)]
         return np.array(score_vec)
 
@@ -77,25 +80,27 @@ class Bandit:
         '''
         Applies the UCB1 policy to calculate recommendations.
         '''
-        return self._allocs['mean'] + \
+        return self._allocs[self.reward_col + '_mean'] + \
                np.sqrt((2 * np.log10(self.t)) / \
-                        self._allocs['count'])
+                        self._allocs[self.reward_col + '_count'])
 
     def bayes_ucb_policy(self):
         '''
         Applies the Bayes UCB policy to calculate recommendations.
         '''
-        return self._allocs['mean'] + \
-               (self.ucb_scale * self._allocs['std'] / \
-                np.sqrt(self._allocs['count']))
+        return self._allocs[self.reward_col + '_mean'] + \
+               (self.ucb_scale * self._allocs[self.reward_col + '_std'] / \
+                np.sqrt(self._allocs[self.reward_col + '_count']))
 
     def compute_stats(self):
         '''
-        Calculates the rewards stats this timestep.
+        Calculates the rewards and regrets stats this timestep.
         '''
-        self._allocs = self.df[[self.arm_col,self.reward_col]].groupby(self.arm_col)\
-                          .agg({self.reward_col:['mean','count','std']})
-        self._allocs.columns = self._allocs.columns.droplevel(0)
+        self._allocs = self.df[[self.arm_col,self.reward_col,self.regret_col]].groupby(self.arm_col)\
+                          .agg({self.reward_col:['mean','count','std','sum'], 
+                                self.regret_col:['mean','count','std','sum']})
+        self._allocs.columns = self._allocs.columns.to_flat_index()
+        self._allocs.columns = ['_'.join(tup).rstrip('_') for tup in self._allocs.columns.values]
         self._allocs = pd.DataFrame(self._allocs).reset_index()
 
     def apply_policy(self):
@@ -130,6 +135,14 @@ class Bandit:
         self._allocs = self._allocs.sort_values('allocation', ascending=False)
         return self.allocs
 
+    def get_allocation_stats(self):
+        '''
+        Wrapper for retreiving the underlying allocation statistics.
+        '''
+        if self._allocs is None:
+            raise ValueError('Must invoke `get_new_allocations` before retrieving statistics.')
+        return self._allocs   
+    
     @property
     def allocs(self):
         '''
