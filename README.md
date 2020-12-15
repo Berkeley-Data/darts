@@ -1,5 +1,5 @@
 # DARTS
-Dynamic and Responsive Targeting System (DARTS) is a python package for allocating targets from a multiple pools leveraging a multi-arm bandit modified for delayed feedback scenarios. Instead of requiring an online implementation like a typical multi-arm bandit, DARTS allows the user to batch process results, which greatly extends is usefulness in the real world. Check out our Case Study (LINK TBD) to see how DARTS was used to help People's Action target persuadable voters in the 2020 U.S. Presidential Election. 
+Dynamic and Responsive Targeting System (DARTS) is a python package for allocating targets from a multiple pools leveraging a multi-arm bandit modified for delayed feedback scenarios. Instead of requiring an online implementation like a typical multi-arm bandit, DARTS allows the user to batch process results, which greatly extends is usefulness in the real world. Check out our [Case Study](https://unbreak.info/case-study/overview) to see how DARTS was used to help People's Action target persuadable voters in the 2020 U.S. Presidential Election. 
 
 ## Installation
 Run the following to install DARTS:
